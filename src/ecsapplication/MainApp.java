@@ -38,6 +38,8 @@
 // ===============================================
 package ecsapplication;
 
+import ecsapplication.service.ApiService;
+
 import java.awt.EventQueue;
 import java.sql.*;
 import java.time.LocalDate;
@@ -112,6 +114,7 @@ public class MainApp extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		
 		// Schedule this application to run on the Event Dispatch Thread (EDT)
 		EventQueue.invokeLater(new Runnable() {
@@ -1044,6 +1047,29 @@ public class MainApp extends JFrame {
 	        
 	        if(confirm == JOptionPane.YES_OPTION) {
 	        	
+	        	
+	        	// --- Call API to CHECKOUT ---
+	            ApiService apiService = new ApiService();
+	            boolean success = apiService.checkoutEquipment(employee.getEmpID(), selectedEquipment.getEquipmentID());
+
+	            if (success) {
+	                JOptionPane.showMessageDialog(dialog, "Checkout Successful for: " + equipmentName);
+
+	                // Update in-memory transaction
+	                employee.checkOut(selectedEquipment);
+
+	                // Refresh UI
+	                FillTable();
+	                refreshViewRecordTable(employee);
+
+	                dialog.dispose();
+
+	            } else {
+	                JOptionPane.showMessageDialog(dialog, "Checkout failed. Please try again.");
+	            }
+	        }
+	    });
+	        	/* === USING DBCONNECT == //
 	        	// Call Employee's checkOut() method to create a new transaction in memory
 	        	Transaction newTxn = employee.checkOut(selectedEquipment);
 	        	
@@ -1125,6 +1151,7 @@ public class MainApp extends JFrame {
 	        // Close dialog after confirmation
 	        dialog.dispose();
 	    });
+		*/
 
 	    // Set up the layout of the dialog using BorderLayout
 	    JPanel panel = new JPanel(new BorderLayout());
