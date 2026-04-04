@@ -17,6 +17,41 @@ The **Equipment Checkout System (ECS)** is a Java-based desktop application deve
 
 - **View Record**: Grants employees’ access to their transaction history and equipment usage records.
 
+## REST API
+The **ECS** now integrates with a **REST API** built with Spring Boot. This allows the desktop GUI to communicate with the server to handle operations such as checking out equipment and updating transactions in a modular way.
+
+**Equipment Checkout Flow of Events**:
+
+- Employee confirms their equipment checkout by pressing the **Yes** option
+
+- CheckoutEquipment method is called from the ApiService (client-side) class with empID and equipmentID variables passed through
+
+- ApiService class performs the following:
+  
+    - Creates an HTTP client to send requests
+ 
+    - Builds a JSON payload using empID and equipmentID
+ 
+    - Builds the HTTP POST request
+ 
+    - Sends the POST request to API endpoint at /transactions/checkout
+ 
+- REST controller named TransactionController receives the clients request and invokes the checkoutEquipment method from the service layer class named TransactionService
+ 
+- The `TransactionController` (REST controller) receives the client’s request and invokes the `checkoutEquipment` method from the `TransactionService` class.
+
+- The `TransactionService` processes the business logic:
+   - Updates the equipment status to `Loaned`  
+   - Inserts a new record into the `transaction` table with `borrowDate` and `expectedReturnDate`  
+
+- The server responds with:
+   - HTTP 200 (OK) if the operation is successful  
+   - HTTP 500 (Internal Server Error) if the operation fails  
+
+- The `TransactionController` sends the response back to the client.
+
+- The `ApiService` receives the response, and the GUI displays a success or failure message to the user.
+  
 ## Testing Support
 
 The ECS project supports testing of all core features using JUnit 5 and an embedded H2 database, allowing each feature to be verified directly.
