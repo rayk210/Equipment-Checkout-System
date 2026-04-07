@@ -36,8 +36,6 @@ The **ECS** now integrates with a **REST API** built with Spring Boot. This allo
  
     - Sends the POST request to API endpoint at /transactions/checkout
  
-- REST controller named TransactionController receives the clients request and invokes the checkoutEquipment method from the service layer class named TransactionService
- 
 - The `TransactionController` (REST controller) receives the client’s request and invokes the `checkoutEquipment` method from the `TransactionService` class.
 
 - The `TransactionService` processes the business logic:
